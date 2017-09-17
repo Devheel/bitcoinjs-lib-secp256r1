@@ -10,7 +10,7 @@ var ZERO = Buffer.alloc(1, 0)
 var ONE = Buffer.alloc(1, 1)
 
 var ecurve = require('ecurve')
-var secp256k1 = ecurve.getCurveByName('secp256k1')
+var secp256r1 = ecurve.getCurveByName('secp256r1')
 
 // https://tools.ietf.org/html/rfc6979#section-3.2
 function deterministicGenerateK (hash, x, checkSig) {
@@ -55,7 +55,7 @@ function deterministicGenerateK (hash, x, checkSig) {
   var T = BigInteger.fromBuffer(v)
 
   // Step H3, repeat until T is within the interval [1, n - 1] and is suitable for ECDSA
-  while (T.signum() <= 0 || T.compareTo(secp256k1.n) >= 0 || !checkSig(T)) {
+  while (T.signum() <= 0 || T.compareTo(secp256r1.n) >= 0 || !checkSig(T)) {
     k = createHmac('sha256', k)
       .update(v)
       .update(ZERO)
@@ -72,21 +72,21 @@ function deterministicGenerateK (hash, x, checkSig) {
   return T
 }
 
-var N_OVER_TWO = secp256k1.n.shiftRight(1)
+var N_OVER_TWO = secp256r1.n.shiftRight(1)
 
 function sign (hash, d) {
   typeforce(types.tuple(types.Hash256bit, types.BigInt), arguments)
 
   var x = d.toBuffer(32)
   var e = BigInteger.fromBuffer(hash)
-  var n = secp256k1.n
-  var G = secp256k1.G
+  var n = secp256r1.n
+  var G = secp256r1.G
 
   var r, s
   deterministicGenerateK(hash, x, function (k) {
     var Q = G.multiply(k)
 
-    if (secp256k1.isInfinity(Q)) return false
+    if (secp256r1.isInfinity(Q)) return false
 
     r = Q.affineX.mod(n)
     if (r.signum() === 0) return false
@@ -112,8 +112,8 @@ function verify (hash, signature, Q) {
     types.ECPoint
   ), arguments)
 
-  var n = secp256k1.n
-  var G = secp256k1.G
+  var n = secp256r1.n
+  var G = secp256r1.G
 
   var r = signature.r
   var s = signature.s
@@ -139,7 +139,7 @@ function verify (hash, signature, Q) {
   var R = G.multiplyTwo(u1, Q, u2)
 
   // 1.4.5 (cont.) Enforce R is not at infinity
-  if (secp256k1.isInfinity(R)) return false
+  if (secp256r1.isInfinity(R)) return false
 
   // 1.4.6 Convert the field element R.x to an integer
   var xR = R.affineX
@@ -157,5 +157,5 @@ module.exports = {
   verify: verify,
 
   // TODO: remove
-  __curve: secp256k1
+  __curve: secp256r1
 }
