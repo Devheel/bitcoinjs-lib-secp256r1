@@ -33,8 +33,8 @@ describe('bitcoinSecp256r1', function () {
   })
 })
 
-const expectedSlip100RootKey = 'e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35'
-const expectedSlip100PrivateKey = 'edb2e14f9ee77d26dd93b4ecede8d16ed408ce149b6cd80b0715a2d911a0afea'
+const expectedSlip100RootKey = '612091aaa12e22dd2abef664f8a01a82cae99ad7441b7ef8110424915c268bc2'
+const expectedSlip100PrivateKey = '6939694369114c67917a182c59ddb8cafc3004e63ca5d3b84403ba8613debc0c'
 // const expectedSlip100WIF = '';
 
 describe('slip-0010-secp256r1', function () {
