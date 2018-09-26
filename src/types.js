@@ -22,7 +22,7 @@ var ECPoint = typeforce.quacksLike('Point')
 // exposed, external API
 var ECSignature = typeforce.compile({ r: BigInt, s: BigInt })
 var Network = typeforce.compile({
-  messagePrefix: typeforce.oneOf(typeforce.Buffer, typeforce.String),
+  //messagePrefix: typeforce.oneOf(typeforce.Buffer, typeforce.String),
   bip32: {
     public: typeforce.UInt32,
     private: typeforce.UInt32
